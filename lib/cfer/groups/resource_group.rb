@@ -21,6 +21,10 @@ module Cfer
         end
         self[:Properties] = {}
       end
+      
+      def condition(name, expr)
+        @stack.condition name_of(name), expr
+      end
 
       def resource(name, type, options = {}, &block)
         rc_name = name_of(name)
