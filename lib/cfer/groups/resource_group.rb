@@ -14,6 +14,7 @@ module Cfer
             Type: type,
             Properties: self[:Properties]
           }
+          self[:Condition] = self[:Properties][:EnabledCondition] if self[:Properties][:EnabledCondition]
         end
 
         Docile.dsl_eval self, self[:Properties] do
@@ -21,7 +22,7 @@ module Cfer
         end
         self[:Properties] = {}
       end
-      
+
       def condition(name, expr)
         @stack.condition name_of(name), expr
       end
@@ -31,7 +32,9 @@ module Cfer
         self[:DependsOn] << rc_name
 
         group = self
-        rc = @stack.resource rc_name, type, options do
+        additional_options = {}
+        additional_options[:Condition] = self[:Properties][:EnabledCondition] if self[:Properties][:EnabledCondition]
+        rc = @stack.resource rc_name, type, options.merge(additional_options) do
           self.cfer_resource_group = group
           self.instance_eval &block
         end
