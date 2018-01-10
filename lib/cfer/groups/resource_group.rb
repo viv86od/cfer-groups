@@ -29,7 +29,9 @@ module Cfer
 
       def resource(name, type, options = {}, &block)
         rc_name = name_of(name)
-        self[:DependsOn] << rc_name
+        # Do not include DependsOn in order to workaround WaitConditionHandle issues.
+        # For other resoureces add it explicitly to the resource group definition.
+        #self[:DependsOn] << rc_name
 
         group = self
         additional_options = {}
